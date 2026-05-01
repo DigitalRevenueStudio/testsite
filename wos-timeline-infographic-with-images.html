@@ -260,19 +260,20 @@ body::before{
 <!-- TIMELINE -->
 <div class="timeline-wrap">
 
-  <!-- DAY 0 -->
-  <div class="tl-row accent-gold" style="align-items:start;grid-template-columns:2fr var(--dot-size) 1fr;">
-    <div class="tl-left" style="padding-top:16px;padding-bottom:16px;">
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <img src="gen1-s-a.png" alt="Gen 1 S+ and A+ heroes" style="width:100%;border-radius:5px;border:1px solid rgba(212,168,42,0.35);" />
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-          <img src="gen1-b-plus.png" alt="Gen 1 B+ heroes" style="width:100%;border-radius:4px;border:1px solid rgba(77,168,218,0.25);" />
-          <img src="gen1-b.png" alt="Gen 1 B heroes" style="width:100%;border-radius:4px;border:1px solid rgba(58,90,122,0.25);" />
-        </div>
-      </div>
+  <!-- DAY 0 — Gen 1 hero images full width above the row -->
+  <div style="margin-bottom:12px;">
+    <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;opacity:0.8;">Generation 1 Heroes — Server Launch</div>
+    <img src="gen1-s-a.png" alt="Gen 1 S+ and A+ heroes" style="width:100%;border-radius:5px;border:1px solid rgba(212,168,42,0.35);margin-bottom:6px;display:block;" />
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <img src="gen1-b-plus.png" alt="Gen 1 B+ heroes" style="width:100%;border-radius:4px;border:1px solid rgba(77,168,218,0.25);" />
+      <img src="gen1-b.png" alt="Gen 1 B heroes" style="width:100%;border-radius:4px;border:1px solid rgba(58,90,122,0.25);" />
     </div>
-    <div class="tl-dot dot-gold" style="align-self:center;"><span class="dot-day">DAY</span><span class="dot-num">0</span></div>
-    <div class="tl-right" style="align-self:center;">
+  </div>
+
+  <div class="tl-row accent-gold">
+    <div class="tl-left"></div>
+    <div class="tl-dot dot-gold"><span class="dot-day">DAY</span><span class="dot-num">0</span></div>
+    <div class="tl-right">
       <div class="tl-card">
         <div class="tl-card-day">Server Launch</div>
         <div class="tl-card-title">Gen 1 Heroes</div>
