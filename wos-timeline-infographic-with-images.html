@@ -88,7 +88,7 @@ body::before{
 /* TIMELINE WRAPPER */
 .timeline-wrap{
   position:relative;z-index:1;
-  max-width:960px;
+  max-width:700px;
   margin:0 auto;
   padding:0 16px 60px;
 }
@@ -261,9 +261,11 @@ body::before{
 <div class="timeline-wrap">
 
   <!-- DAY 0 -->
-  <div class="tl-row accent-gold" style="align-items:center;grid-template-columns:3fr var(--dot-size) 1.5fr;">
-    <div class="tl-left" style="padding:8px 14px 8px 0;">
-      <img src="gen-1-heroes-v3.png" alt="Gen 1 heroes — all tiers" style="width:100%;border-radius:6px;display:block;" />
+  <div class="tl-row accent-gold">
+    <div class="tl-left" style="display:flex;align-items:center;justify-content:flex-end;padding:12px 14px 12px 0;">
+      <div style="background:var(--panel);border:1px solid rgba(212,168,42,0.35);border-left:3px solid var(--gold);border-radius:6px;padding:8px;width:100%;max-width:340px;">
+        <img src="gen-1-heroes-v3.png" alt="Gen 1 heroes — all tiers" style="width:100%;border-radius:3px;display:block;" />
+      </div>
     </div>
     <div class="tl-dot dot-gold"><span class="dot-day">DAY</span><span class="dot-num">0</span></div>
     <div class="tl-right">
