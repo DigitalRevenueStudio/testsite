@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WOS Server Timeline Infographic</title>
+<style>
+:root{
+  --bg:#050D1A;
+  --panel:#0D1F38;
+  --border:#1A3A5C;
+  --bright:#4DA8DA;
+  --glow:#7DD4F8;
+  --white:#FFFFFF;
+  --text:#B8D4E8;
+  --muted:#5A7A94;
+  --gold:#D4A82A;
+  --green:#2ECC71;
+  --red:#E74C3C;
+  --blue:#4DA8DA;
+  --orange:#E8832A;
+  --dim:#3A5A7A;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Segoe UI',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse 60% 30% at 50% 0%,rgba(77,168,218,0.07) 0%,transparent 60%);
+  pointer-events:none;z-index:0;
+}
+
+/* HEADER */
+.tl-header{position:relative;z-index:1;text-align:center;padding:48px 24px 28px;}
+.tl-eyebrow{font-size:0.65rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--bright);margin-bottom:10px;}
+.tl-title{font-size:clamp(2rem,5vw,3.2rem);font-weight:900;letter-spacing:0.06em;text-transform:uppercase;color:var(--white);line-height:1.0;margin-bottom:8px;}
+.tl-title span{color:var(--glow);}
+.tl-sub{font-size:0.82rem;color:var(--muted);max-width:480px;margin:0 auto 20px;line-height:1.6;}
+
+/* LEGEND */
+.legend{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;padding:12px 24px;background:rgba(0,0,0,0.2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;z-index:1;margin-bottom:8px;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:0.7rem;color:var(--muted);}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.ld-gold{background:var(--gold);}
+.ld-blue{background:var(--blue);}
+.ld-green{background:var(--green);}
+.ld-red{background:var(--red);}
+.ld-orange{background:var(--orange);}
+.ld-dim{background:var(--dim);}
+
+/* TIMELINE FEED */
+.tl-feed{
+  position:relative;z-index:1;
+  max-width:680px;
+  margin:0 auto;
+  padding:24px 16px 80px;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+
+/* CONNECTOR LINE between cards */
+.tl-feed::before{
+  content:'';
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  top:24px;bottom:80px;
+  width:2px;
+  background:linear-gradient(180deg,var(--gold) 0%,var(--blue) 30%,var(--green) 50%,var(--red) 70%,var(--dim) 100%);
+  z-index:0;
+}
+
+/* CONNECTOR BETWEEN CARDS */
+.tl-connector{
+  display:flex;justify-content:center;
+  height:32px;position:relative;z-index:1;
+}
+.tl-connector::after{
+  content:'';width:2px;height:100%;
+  background:rgba(255,255,255,0.06);
+}
+
+/* CARD */
+.tl-card{
+  position:relative;z-index:1;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-left:4px solid var(--accent-color, var(--border));
+  border-radius:0 6px 6px 0;
+  overflow:hidden;
+  width:100%;
+}
+
+/* CARD HEADER */
+.tl-card-header{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:14px 18px 12px;
+  border-bottom:1px solid var(--border);
+  background:rgba(0,0,0,0.15);
+}
+.tl-day-badge{
+  font-family:'Segoe UI',sans-serif;
+  font-weight:900;
+  font-size:0.62rem;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--bg);
+  background:var(--accent-color,var(--border));
+  padding:4px 10px;
+  border-radius:3px;
+  white-space:nowrap;
+  flex-shrink:0;
+  line-height:1.3;
+  text-align:center;
+}
+.tl-day-badge .day-label{display:block;font-size:0.5rem;opacity:0.75;letter-spacing:0.1em;}
+.tl-day-badge .day-num{display:block;font-size:0.95rem;font-weight:900;line-height:1.1;}
+.tl-card-headline{flex:1;}
+.tl-card-eyebrow{font-size:0.62rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent-color,var(--muted));margin-bottom:3px;}
+.tl-card-title{font-size:1.05rem;font-weight:800;color:var(--white);line-height:1.2;}
+
+/* CARD IMAGE */
+.tl-card-image{padding:0;}
+.tl-card-image img{width:100%;display:block;}
+.tl-img-placeholder{
+  background:rgba(0,0,0,0.2);
+  border-top:1px solid var(--border);
+  padding:24px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  min-height:80px;
+}
+.tl-img-placeholder-icon{font-size:1.4rem;opacity:0.25;}
+.tl-img-placeholder-label{font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
+
+/* CARD BODY */
+.tl-card-body{padding:12px 18px 14px;}
+.tl-card-desc{font-size:0.82rem;color:var(--text);line-height:1.7;margin-bottom:10px;}
+.tags{display:flex;flex-wrap:wrap;gap:4px;}
+.tag{font-size:0.6rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:3px 8px;border-radius:2px;}
+.tag-gold{background:rgba(212,168,42,0.12);color:var(--gold);border:1px solid rgba(212,168,42,0.2);}
+.tag-blue{background:rgba(77,168,218,0.12);color:var(--blue);border:1px solid rgba(77,168,218,0.2);}
+.tag-green{background:rgba(46,204,113,0.12);color:var(--green);border:1px solid rgba(46,204,113,0.2);}
+.tag-red{background:rgba(231,76,60,0.12);color:var(--red);border:1px solid rgba(231,76,60,0.2);}
+.tag-orange{background:rgba(232,131,42,0.12);color:var(--orange);border:1px solid rgba(232,131,42,0.2);}
+.tag-dim{background:rgba(58,90,122,0.12);color:var(--dim);border:1px solid rgba(58,90,122,0.2);}
+
+/* ACCENT COLOURS */
+.accent-gold{--accent-color:var(--gold);}
+.accent-blue{--accent-color:var(--blue);}
+.accent-green{--accent-color:var(--green);}
+.accent-red{--accent-color:var(--red);}
+.accent-orange{--accent-color:var(--orange);}
+.accent-dim{--accent-color:var(--dim);}
+
+/* FOOTER */
+.tl-footer{position:relative;z-index:1;text-align:center;padding:24px;border-top:1px solid var(--border);}
+.tl-footer a{font-size:0.75rem;color:var(--bright);text-decoration:none;letter-spacing:0.06em;}
+.tl-footer p{font-size:0.68rem;color:var(--muted);margin-top:4px;}
+</style>
+</head>
+<body>
+
+<div class="tl-header">
+  <div class="tl-eyebrow">WOS Wiki | Digital Revenue Studio</div>
+  <div class="tl-title">Server <span>Timeline</span></div>
+  <p class="tl-sub">Every major unlock from Day 0 to late game. Heroes, pets, systems and milestones in order.</p>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot ld-gold"></div>Hero / System Unlock</div>
+  <div class="legend-item"><div class="legend-dot ld-blue"></div>Hero Generation</div>
+  <div class="legend-item"><div class="legend-dot ld-green"></div>Pet Unlock</div>
+  <div class="legend-item"><div class="legend-dot ld-red"></div>Major System</div>
+  <div class="legend-item"><div class="legend-dot ld-orange"></div>Event Unlock</div>
+  <div class="legend-item"><div class="legend-dot ld-dim"></div>Late Game</div>
+</div>
+
+<div class="tl-feed">
+
+  <!-- DAY 0 -->
+  <div class="tl-card accent-gold">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">0</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Server Launch</div>
+        <div class="tl-card-title">Generation 1 Heroes</div>
+      </div>
+    </div>
+    <div class="tl-card-image">
+      <img src="gen-1-heroes-v3.png" alt="Gen 1 heroes, all tiers" />
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">17 heroes across 4 tiers. Molly is your free SSR via 7-day login. Skip Jeronimo. P2W only. Focus on Molly, Sergey and Bahiti early.</p>
+      <div class="tags">
+        <span class="tag tag-gold">S+</span>
+        <span class="tag tag-blue">A+</span>
+        <span class="tag tag-green">B+</span>
+        <span class="tag tag-dim">B</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 40 -->
+  <div class="tl-card accent-blue">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">40</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Hero Generation 2</div>
+        <div class="tl-card-title">Alonso · Flint · Philly</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Gen 2 Hero Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Gold Shards go to Alonso for 4★. Flint is Wheel only. Never spend Gold Shards on him. Philly via Hall of Chiefs Season rewards.</p>
+      <div class="tags"><span class="tag tag-gold">SSR ×3</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 53 -->
+  <div class="tl-card accent-green">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">53</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">First Pets (1–3)</div>
+        <div class="tl-card-title">Cave Hyena · Arctic Wolf · Musk Ox</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Pet Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Start investing in pets from Day 53. Invest gradually and save Refinement materials for SvS prep scoring windows.</p>
+      <div class="tags"><span class="tag tag-green">Pets 1–3</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 60 -->
+  <div class="tl-card accent-red">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">60</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Major System</div>
+        <div class="tl-card-title">Fire Crystal Era 1–3</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Fire Crystal Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Powers highest Furnace tiers and T11 troops. One of the biggest early milestones. Plan Fire Crystal use from Day 1.</p>
+      <div class="tags"><span class="tag tag-red">System</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 85 -->
+  <div class="tl-card accent-orange">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">85</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Events Unlock</div>
+        <div class="tl-card-title">SvS &amp; King of Icefield</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">SvS / KoI Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Largest competitive events begin. Alliance coordination becomes the primary differentiator from this point on.</p>
+      <div class="tags"><span class="tag tag-orange">Event</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 91 -->
+  <div class="tl-card accent-green">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">91</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Pets 4–5</div>
+        <div class="tl-card-title">Titan Roc · Giant Tapir</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Titan Roc Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Pet investment becomes more meaningful from this wave. Consistent investment from Day 53 compounds significantly by late game.</p>
+      <div class="tags"><span class="tag tag-green">Pets 4–5</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 120 -->
+  <div class="tl-card accent-blue">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">120</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Hero Generation 3</div>
+        <div class="tl-card-title">Logan · Mia · Greg</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Logan / Mia Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Mia relevant into Gen 6+. Logan best early-mid garrison hero. Both are safe Exclusive Gear targets. Greg skip.</p>
+      <div class="tags"><span class="tag tag-gold">SSR ×3</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 145 -->
+  <div class="tl-card accent-green">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">145</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Pets 6–7</div>
+        <div class="tl-card-title">Giant Elk · Snow Leopard</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Giant Elk Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Crystal Laboratory unlocks at Day 150 when FC Building reaches Level 5.</p>
+      <div class="tags"><span class="tag tag-green">Pets 6–7</span><span class="tag tag-red">Crystal Lab</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 180 -->
+  <div class="tl-card accent-gold">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">180</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">System Unlock</div>
+        <div class="tl-card-title">Legendary Chief Gear</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Chief Gear Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Save Essence Stones from Hall of Chiefs and events from early on. Be ready for this unlock.</p>
+      <div class="tags"><span class="tag tag-gold">Legendary</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 195 -->
+  <div class="tl-card accent-blue">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">195</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Hero Generation 4</div>
+        <div class="tl-card-title">Reina · Ahmose · Lynn</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Reina / Ahmose Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Lynn via Wheel only. Reina support utility. Ahmose solid mid-game infantry attacker.</p>
+      <div class="tags"><span class="tag tag-gold">SSR ×3</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 200 -->
+  <div class="tl-card accent-green">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">200</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Pets 8–9</div>
+        <div class="tl-card-title">Iron Rhino · Sabre-tooth Tiger</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Iron Rhino Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Iron Rhino top priority for defenders and rally leaders. Troop defence bonus is particularly valuable in SvS and Foundry Battle. Prioritise immediately.</p>
+      <div class="tags"><span class="tag tag-green">Pets 8–9</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 220 -->
+  <div class="tl-card accent-red">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">220</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Biggest Power Jump</div>
+        <div class="tl-card-title">War Academy + T11 Troops</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">War Academy / T11 Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Single largest power jump on the entire timeline. Players who develop War Academy vs those who ignore it face a permanent compounding power gap.</p>
+      <div class="tags"><span class="tag tag-red">War Academy</span><span class="tag tag-red">T11</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 270 -->
+  <div class="tl-card accent-blue">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">270</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Hero Generation 5</div>
+        <div class="tl-card-title">Hector · Norah · Gwen</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Hector / Norah Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Gwen is a strong Wheel target. Hector pairs with Mia for combat. Norah support utility.</p>
+      <div class="tags"><span class="tag tag-gold">SSR ×3</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 280 -->
+  <div class="tl-card accent-green">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">280</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Pets 10–11</div>
+        <div class="tl-card-title">Snow Ape · Cave Lion</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Snow Ape Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Snow Ape top priority for rally leaders. March capacity bonus multiplies across every SvS action and Foundry rally.</p>
+      <div class="tags"><span class="tag tag-green">Pets 10–11</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 311 -->
+  <div class="tl-card accent-gold">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">311</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Late Game Begins</div>
+        <div class="tl-card-title">Refined Fire Crystal</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Refined FC Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">FC Building Lv5–8. Powers highest-tier late game progression. This is the transition point to late game.</p>
+      <div class="tags"><span class="tag tag-gold">Refined FC</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 360 -->
+  <div class="tl-card accent-blue">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">360</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Hero Generation 6</div>
+        <div class="tl-card-title">Wu Ming · Renee · Wayne</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Wu Ming / Wayne Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Wayne is the F2P endgame infantry target. Alonso + Mia + Wayne is competitive against many spender rosters at this stage.</p>
+      <div class="tags"><span class="tag tag-gold">SSR ×3</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 370 -->
+  <div class="tl-card accent-green">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">370</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Pet 12</div>
+        <div class="tl-card-title">Mammoth</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Mammoth Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Strong late-game combat buffs. Consistent pet investment since Day 53 means substantial compounding bonuses by Day 370.</p>
+      <div class="tags"><span class="tag tag-green">Pet 12</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 440 -->
+  <div class="tl-card accent-blue">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">440</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Hero Generation 7</div>
+        <div class="tl-card-title">Edith · Gordon · Bradley</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Edith / Gordon Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Core investment heroes should be well-established by now. Do not automatically invest in new generations. Evaluate each carefully.</p>
+      <div class="tags"><span class="tag tag-gold">SSR ×3</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 520 -->
+  <div class="tl-card accent-blue">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">520</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Hero Generation 8</div>
+        <div class="tl-card-title">Gatot · Sonya · Hendrix</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Gatot / Sonya Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Use current generation heroes as primary Bear Hunt targets from Gen 8 onwards for maximum damage.</p>
+      <div class="tags"><span class="tag tag-gold">SSR ×3</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 600 -->
+  <div class="tl-card accent-blue">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">600</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Hero Generation 9</div>
+        <div class="tl-card-title">Magnus · Fred · Xura</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Magnus / Fred Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Deep endgame. Resource efficiency and coordinated alliance play are the primary differentiators here.</p>
+      <div class="tags"><span class="tag tag-gold">SSR ×3</span></div>
+    </div>
+  </div>
+
+  <div class="tl-connector"></div>
+
+  <!-- DAY 700+ -->
+  <div class="tl-card accent-dim">
+    <div class="tl-card-header">
+      <div class="tl-day-badge"><span class="day-label">DAY</span><span class="day-num">700+</span></div>
+      <div class="tl-card-headline">
+        <div class="tl-card-eyebrow">Hero Generations 10–11</div>
+        <div class="tl-card-title">Gregory · Freya · Blanchette</div>
+      </div>
+    </div>
+    <div class="tl-img-placeholder">
+      <span class="tl-img-placeholder-icon">🖼️</span>
+      <span class="tl-img-placeholder-label">Gen 10/11 Image</span>
+    </div>
+    <div class="tl-card-body">
+      <p class="tl-card-desc">Very long-running servers. Gen 11 (Eleonora, Lloyd, Rufus) at Day 800+. Principles remain the same: 1 to 2 heroes per gen, Wheel consistently.</p>
+      <div class="tags"><span class="tag tag-dim">Late Game</span></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="tl-footer">
+  <a href="https://www.digitalrevenuestudio.co.uk/wos-guide-server-timeline.html">Full Server Timeline Guide — WOS Wiki &rarr;</a>
+  <p>All timings approximate. Variance of 7 to 21 days is normal between servers.</p>
+</div>
+
+</body>
+</html>
